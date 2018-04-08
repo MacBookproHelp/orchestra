@@ -1,30 +1,29 @@
 import threading
 import socket
-import logging
-
+from socket import *
 class Broker():
+   def broadcast(self,msg):
+       self.sock=socket(AF_INET,SOCK_DGRAM)
+       host='192.168.1.255'
+       port=10000
+       address=host,port
+       self.sock.setsockopt(SOL_SOCKET,SO_BROADCAST,1)
+       msg='hi broadcast'
+       self.sock.sendto(msg.encode(),(address))
+   def __init__(self):
+         self.sock = socket(AF_INET,SOCK_DGRAM)
+         self.sock.bind(('192.168.1.60', 10000))
+         self.clients_list = []
 
-    def __init__(self):
-        logging.info('Initializing Broker')
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind(('192.168.1.60', 4242))
-        self.clients_list = []
+   def talkToClient(self, ip):
+           self.sock.sendto("ok".encode('utf-8'), ip)
 
-    def talkToClient(self, ip):
-        logging.info("Sending 'ok' to %s", ip)
-        self.sock.sendto("ok", ip)
-
-    def listen_clients(self):
-        while True:
-            msg, client = self.sock.recvfrom(1024)
-            
-            logging.info('Received data from client %s: %s', client, msg)
-            t = threading.Thread(target=self.talkToClient, args=(client,))
-            t.start()
-
-if __name__ == '__main__':
-    # Make sure all log messages show up
-    logging.getLogger().setLevel(logging.DEBUG)
-
-    b = Broker()
-    b.listen_clients()
+   def listen_clients(self):
+           while True:
+               msg, client = self.sock.recvfrom(1024)
+               print (msg.decode())
+               t = threading.Thread(None, self.talkToClient, None, (client,), None)
+               t.start()
+b = Broker()
+b.listen_clients()
+b.broadcast(msg='this os bros')
