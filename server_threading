@@ -17,6 +17,7 @@ class Broker():
     def listen_clients(self):
         while True:
             msg, client = self.sock.recvfrom(1024)
+            
             logging.info('Received data from client %s: %s', client, msg)
             t = threading.Thread(target=self.talkToClient, args=(client,))
             t.start()
