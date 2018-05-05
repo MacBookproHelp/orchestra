@@ -1,7 +1,7 @@
 import threading
 import socket
 from socket import *
-class Broker():
+class Broker(msg):
    def broadcast(self,msg):
        self.sock=socket(AF_INET,SOCK_DGRAM)
        host='192.168.1.255'
