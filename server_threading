@@ -5,7 +5,7 @@ from socket import *
 import time
 from time import ctime
 
-class Broker():
+class Controller():
 
     def __init_(self):
         self.sock=socket(AF_INET, SOCK_DGRAM)
@@ -32,6 +32,6 @@ class Broker():
                 t.start()
 
 if __name__=='__main__':
-    b= Broker()
-    b.broad(msg="")
-    b.listen_clients()
+    C= Controller()
+    C.broad(msg="")
+    C.listen_clients()
