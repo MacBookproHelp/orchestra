@@ -28,6 +28,7 @@ class Controller():
             while True:
                 msg, client = self.sock.recvfrom(1024)
                 print(msg.decode())
+                print('connected with : ' + client[0]+ ':' + str(client[1]))
                 t = threading.Thread(target= self.talkToClient,args=(client,))
                 t.start()
 
