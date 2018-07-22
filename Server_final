@@ -28,7 +28,15 @@ class Controller():
         self.sock.sendto(msg.encode(),add)
     def __init__(self):
           self.sock =socket(AF_INET, SOCK_DGRAM)
-          self.sock.bind(('192.168.1.27',4242))
+          interfaces = netifaces.interfaces()
+          for i in interfaces:
+              if i == 'lo':
+                  continue
+              iface = netifaces.ifaddresses(i).get(netifaces.AF_INET)
+              if iface != None:
+                  for j in iface:
+                      ip = (j['addr'])
+          self.sock.bind((ip,4242))
           self.clients_list = []
 
     def talkToClient(self, ip):
@@ -46,3 +54,4 @@ if __name__=='__main__':
     C= Controller()
     C.broad(msg="")
     C.listen_clients()
+
