@@ -1,0 +1,48 @@
+import threading
+from threading import Thread
+import socket
+from socket import *
+import time
+from time import ctime
+import netifaces
+#getting ip address from machine and bd it to the client
+class Controller():
+
+    def __init_(self):
+        self.sock=socket(AF_INET, SOCK_DGRAM)
+    def broad(self,msg):
+        interfaces = netifaces.interfaces()
+        for i in interfaces:
+            if i == 'lo':
+                continue
+            iface = netifaces.ifaddresses(i).get(netifaces.AF_INET)
+            if iface != None:
+                for j in iface:
+                    ip = (j['addr'])
+
+        host = '192.168.1.255'
+        port = 12345
+        add = host, port
+        msg=ip
+        self.sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.sock.sendto(msg.encode(),add)
+    def __init__(self):
+          self.sock =socket(AF_INET, SOCK_DGRAM)
+          self.sock.bind(('192.168.1.27',4242))
+          self.clients_list = []
+
+    def talkToClient(self, ip):
+            self.sock.sendto("ok".encode('utf-8'), ip)
+
+    def listen_clients(self):
+            while True:
+                msg, client = self.sock.recvfrom(1024)
+                print(msg.decode())
+                print('connected with : ' + client[0]+ ':' + str(client[1]))
+                t = threading.Thread(target= self.talkToClient,args=(client,))
+                t.start()
+
+if __name__=='__main__':
+    C= Controller()
+    C.broad(msg="")
+    C.listen_clients()
