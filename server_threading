@@ -1,29 +1,37 @@
 import threading
+from threading import Thread
 import socket
 from socket import *
-class Broker(msg):
-   def broadcast(self,msg):
-       self.sock=socket(AF_INET,SOCK_DGRAM)
-       host='192.168.1.255'
-       port=10000
-       address=host,port
-       self.sock.setsockopt(SOL_SOCKET,SO_BROADCAST,1)
-       msg='hi broadcast'
-       self.sock.sendto(msg.encode(),(address))
-   def __init__(self):
-         self.sock = socket(AF_INET,SOCK_DGRAM)
-         self.sock.bind(('192.168.1.60', 10000))
-         self.clients_list = []
+import time
+from time import ctime
 
-   def talkToClient(self, ip):
-           self.sock.sendto("ok".encode('utf-8'), ip)
+class Broker():
 
-   def listen_clients(self):
-           while True:
-               msg, client = self.sock.recvfrom(1024)
-               print (msg.decode())
-               t = threading.Thread(None, self.talkToClient, None, (client,), None)
-               t.start()
-b = Broker()
-b.listen_clients()
-b.broadcast(msg='this os bros')
+    def __init_(self):
+        self.sock=socket(AF_INET, SOCK_DGRAM)
+    def broad(self,msg):
+        host = '192.168.1.255'
+        port = 12345
+        ip = host, port
+        msg="Broadcasting msg"
+        self.sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.sock.sendto(msg.encode(),ip)
+    def __init__(self):
+          self.sock =socket(AF_INET, SOCK_DGRAM)
+          self.sock.bind(('192.168.1.27',4242))
+          self.clients_list = []
+
+    def talkToClient(self, ip):
+            self.sock.sendto("ok".encode('utf-8'), ip)
+
+    def listen_clients(self):
+            while True:
+                msg, client = self.sock.recvfrom(1024)
+                print(msg.decode())
+                t = threading.Thread(target= self.talkToClient,args=(client,))
+                t.start()
+
+if __name__=='__main__':
+    b= Broker()
+    b.broad(msg="")
+    b.listen_clients()
