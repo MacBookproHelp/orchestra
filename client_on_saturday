@@ -1,0 +1,57 @@
+import threading
+from threading import Thread
+import socket
+from socket import *
+import time
+from time import ctime
+import netifaces
+import re
+import os
+#change the ethernet address as per your card
+#there may be a prob when getting bd address since it takes dockers bd address
+#only prob with bd and ip works fine
+#client gets ip address from bd and sends the msg to the server
+class Client():
+
+    def __init__(self):
+
+        self.sock = socket(AF_INET, SOCK_DGRAM)
+
+    def receive_bd(self):
+        #receive broadcast
+        def get_ip_data(ether_adapter):
+
+            ip_data = os.popen("ifconfig " + ether_adapter)
+            for line in ip_data:
+                match2 = re.search(r'broadcast\s+(\d+.\d+.\d+.\d+)', line)
+                if match2:
+                    bd = match2.group(1)
+                    return bd
+
+
+        if __name__ == "__main__":
+            ethernet_card = "wlp1s0"
+            inet_list = get_ip_data(ethernet_card)
+            #print(inet_list)
+        self.sock.bind((inet_list, 12345))
+        msg, client = self.sock.recvfrom(1024)
+        a=(msg.decode())
+        host = a
+        port = 4242
+        address = (host, port)
+        #send msg to the the ip u just received
+        self.sock.sendto("connection".encode(), address)
+
+    def rec(self):
+        #thread to receive bd and send back the msg
+        self.Thread=threading.Thread(target=self.receive_bd,args="",)
+        self.Thread.start()
+        time.sleep(2)
+        self.Thread=False
+        self.Thread.join()
+
+
+
+if __name__=="__main__":
+    C=Client()
+    C.receive_bd()
