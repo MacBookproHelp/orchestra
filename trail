@@ -1,0 +1,62 @@
+import netifaces
+import os
+import re
+#getting ip address from machine and bd it to the client
+class Controller():
+
+    def __init_(self):
+        self.sock=socket(AF_INET, SOCK_DGRAM)
+    def broad(self,msg):
+        def get_ip_data(ether_adapter):
+
+            ip_data=os.popen("ifconfig" + ether_adapter)
+            for line in ip_data:
+                match2=re.search(r'Bcast\s+(\d+.\d+.\d+.\d+)',line)
+                if match2:
+                    ip1=match2.group(1)
+                    return ip1
+            if __name__=="__main__":
+                ethernet_card="wlp3s0"
+                inet_list=get_ip_data(ethernet_card)
+                host=inet_list
+                print(host)
+        #host = '192.168.1.255'
+        port = 12345
+        add = host, port
+        msg=ip
+
+        self.sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.sock.sendto(msg.encode(),add)
+    def __init__(self):
+          self.sock =socket(AF_INET, SOCK_DGRAM)
+          def get_ip_data(ether_adapter):
+              ip_data = os.popen("ifconfig" + ether_adapter)
+              for line in ip_data:
+                  match1 = re.search(r'inet\s+(\d+.\d+.\d+.\d+)', line)
+                  if match1:
+                      ip = match1.group(1)
+                      return ip
+          if __name__ == "__main__":
+              ethernet_card = "wlp3s0"
+              inet_list = get_ip_data(ethernet_card)
+              ip = inet_list
+              print(ip)
+          self.sock.bind((ip,4242))
+          self.clients_list = []
+
+    def talkToClient(self, ip):
+            self.sock.sendto("ok".encode('utf-8'), ip)
+
+    def listen_clients(self):
+        #listen to multiple clients
+            while True:
+                msg, client = self.sock.recvfrom(1024)
+                print(msg.decode())
+                print('connected with : ' + client[0]+ ':' + str(client[1]))
+                t = threading.Thread(target= self.talkToClient,args=(client,))
+                t.start()
+
+if __name__=='__main__':
+    C= Controller()
+    C.broad(msg="")
+    C.listen_clients()
