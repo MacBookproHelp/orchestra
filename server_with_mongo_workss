@@ -1,0 +1,111 @@
+#server uses mongo db and stores dictionaries
+import threading
+from threading import Thread
+import socket
+from socket import *
+import time
+import pymongo
+from datetime import datetime
+from time import ctime
+#broadcast works for this program
+import netifaces
+import os
+import re
+import struct
+import json
+#getting ip address from machine and bd it to the client
+class Controller():
+
+    def __init_(self):
+        self.sock=socket(AF_INET, SOCK_DGRAM)
+    def broad(self,msg):
+        def get_ip_data(ether_adapter):
+            ip_data = os.popen("ifconfig " + ether_adapter)
+            for line in ip_data:
+                match2 = re.search(r'Bcast:+(\d+.\d+.\d+.\d+)', line)
+                # match3 = re.search(r'Bcast\s+(\d+.\d+.\d+.\d+)', line)
+
+                if match2:
+                    bcast = match2.group(1)
+                    return bcast
+
+        def ip1(ether_adapter):
+            ip_data = os.popen("ifconfig " + ether_adapter)
+            for line in ip_data:
+                match1 = re.search(r'inet addr:+(\d+.\d+.\d+.\d+)', line)
+
+                if match1:
+                    ip = match1.group(1)
+                    return ip
+
+        if __name__ == "__main__":
+            ethernet_card = "wlp3s0"
+            host = get_ip_data(ethernet_card)
+            ip=ip1(ethernet_card)
+
+
+        #host = '192.168.1.255'
+        port = 12345
+        add = host, port
+        msg=ip
+        self.sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.sock.sendto(msg.encode(),add)
+    def __init__(self):
+          self.sock =socket(AF_INET, SOCK_DGRAM)
+          #get ip address via netifaces
+          def ip1(ether_adapter):
+              ip_data = os.popen("ifconfig " + ether_adapter)
+              for line in ip_data:
+                  match1 = re.search(r'inet addr:+(\d+.\d+.\d+.\d+)', line)
+
+                  if match1:
+                      ip = match1.group(1)
+                      return ip
+
+          if __name__ == "__main__":
+              ethernet_card = "wlp3s0"
+              ip = ip1(ethernet_card)
+          self.sock.bind((ip,4242))
+          self.clients_list = []
+
+
+
+    def talkToClient(self, ip):
+            self.sock.sendto("ok".encode('utf-8'), ip)
+
+    def parserr(self,payload):
+        uri = "mongodb://localhost:27017"
+        client = pymongo.MongoClient(uri)
+        db = client['name_of_database']
+        collection = db['name_of_collection']
+
+        # Build a basic dictionary
+
+        # Insert the dictionary into Mongo
+        collection.insert(payload)
+        testData = collection.find({})
+        for test in testData:
+            print(test)
+
+
+    def listen_clients(self):
+        #listen to multiple clients
+            while True:
+                msgg, client = self.sock.recvfrom(1024)
+                json_data=b""
+                json_data+=msgg
+                payload=json.loads(json_data.decode())
+                print(type(payload))
+                print(payload)
+
+                print("msg".format(**payload))
+                print('connected with : ' + client[0]+ ':' + str(client[1]))
+                t = threading.Thread(target= self.talkToClient,args=(client,))
+                t2=threading.Thread(target=self.parserr,args=(payload,))
+                t.start()
+                t2.start()
+if __name__=='__main__':
+    C= Controller()
+    C.broad(msg="")
+    C.listen_clients()
+    C.parserr()
