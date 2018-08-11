@@ -1,0 +1,47 @@
+import threading
+from threading import Thread
+import socket
+from socket import *
+import time
+import os
+import struct
+
+import json
+from time import ctime
+import netifaces
+#there may be a prob when getting bd address since it takes dockers bd address
+#only prob with bd and ip works fine
+#client gets ip address from bd and sends the msg to the server
+class Client():
+
+    def __init__(self):
+
+        self.sock = socket(AF_INET, SOCK_DGRAM)
+
+    def receive_bd(self):
+        #receive broadcast
+        self.sock.bind(('192.168.1.255', 12345))
+        msg, client = self.sock.recvfrom(1024)
+        a=(msg.decode())
+        host = a
+        port = 4242
+        address = (host, port)
+        payload={"id":124343,"msg":"Hello server"}
+        json_data=json.dumps(payload)
+        print("sending".format(**payload))
+        #send msg to the the ip u just received
+        self.sock.sendto(json_data.encode(), address)
+        print("sent")
+    def rec(self):
+        #thread to receive bd and send back the msg
+        self.Thread=threading.Thread(target=self.receive_bd,args="",)
+        self.Thread.start()
+        time.sleep(2)
+        self.Thread=False
+        self.Thread.join()
+
+
+
+if __name__=="__main__":
+    C=Client()
+    C.receive_bd()
