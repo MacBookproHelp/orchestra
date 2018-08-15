@@ -5,7 +5,7 @@ from socket import *
 import time
 import os
 import struct
-
+import re
 import json
 from time import ctime
 import netifaces
@@ -19,19 +19,34 @@ class Client():
         self.sock = socket(AF_INET, SOCK_DGRAM)
 
     def receive_bd(self):
+        def get_ip_data(ether_adapter):
+
+            ip_data = os.popen("ifconfig " + ether_adapter)
+            for line in ip_data:
+                match2 = re.search(r'broadcast\s+(\d+.\d+.\d+.\d+)', line)
+                if match2:
+                    bd = match2.group(1)
+                    return bd
+
+
+        if __name__ == "__main__":
+            ethernet_card = "wlp1s0"
+            inet_list = get_ip_data(ethernet_card)
+            #print(inet_list)
+        self.sock.bind((inet_list, 12345))
         #receive broadcast
-        self.sock.bind(('192.168.1.255', 12345))
+
         msg, client = self.sock.recvfrom(1024)
         a=(msg.decode())
         host = a
         port = 4242
         address = (host, port)
-        payload={"id":124343,"msg":"Hello server"}
+        payload={"id":34,"msg":"Hello server"}
         json_data=json.dumps(payload)
         print("sending".format(**payload))
         #send msg to the the ip u just received
         self.sock.sendto(json_data.encode(), address)
-        print("sent")
+        print("sent",json_data)
     def rec(self):
         #thread to receive bd and send back the msg
         self.Thread=threading.Thread(target=self.receive_bd,args="",)
@@ -44,4 +59,4 @@ class Client():
 
 if __name__=="__main__":
     C=Client()
-    C.receive_bd()
+C.receive_bd()
