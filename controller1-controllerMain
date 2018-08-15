@@ -1,3 +1,4 @@
+
 import threading
 from threading import Thread
 import socket
@@ -37,6 +38,7 @@ class Controller1():
         msg, client = self.sock.recvfrom(1024)
         a=(msg.decode())
         host = a
+        print(host)
         #bidirec con ver
         port = 4545
         address = (host, port)
@@ -44,17 +46,9 @@ class Controller1():
             msg = input("Controller 1 :")
             self.sock.sendto(bytearray(msg, "utf-8"), address)
             reply = self.sock.recvfrom(1000)
-            print(reply)
             recved = str(reply)
-            print("Main Controller: %s " % (recved))
+        print("Main Controller: %s " % (recved))
         #send msg to the the ip u just received
-    def rec(self):
-        #thread to receive bd and send back the msg
-        self.Thread=threading.Thread(target=self.receive_bd,args="",)
-        self.Thread.start()
-        time.sleep(2)
-        self.Thread=False
-        self.Thread.join()
 
 
 
