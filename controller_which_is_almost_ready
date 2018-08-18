@@ -108,7 +108,7 @@ class Controller(Thread):
 
                 if("controller" in payload):
                     print("ok fine")
-                    self.sock.sendto("hey controller".encode('utf-8'),client)
+                    self.sock.sendto((input("Enter your ack for other controller here :>").encode('utf-8'),client)
                     print("yes sending",client)
                 else:
                     print('connected with : ' + client[0]+ ':' + str(client[1]))
