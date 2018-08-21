@@ -12,3 +12,29 @@ def broadcast_recv(Host,port):
 if __name__=="__main__":
     t1 = threading.Thread(target=broadcast_recv, name='broadrecv', args=('192.168.1.255', 9283))
     t1.start()
+
+
+
+import threading
+import time
+import socket
+
+def broadcast(Host,port):
+    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    msg="hi"
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
+    sock.sendto(msg.encode(), (Host,port))
+'''
+def listen_broadcast(Host,port):
+    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    sock.bind((Host,port))
+    msg,client=sock.recvfrom(1024)
+    print(msg.decode())
+
+'''
+if __name__=="__main__":
+    t1 = threading.Thread(target=broadcast, name='bd', args=('192.168.1.255', 9283))
+    #t2=threading.Thread(target=listen_broadcast, name='lis_bd',args=('192.168.1.255',9567))
+    t1.start()
+    #t2.start()
