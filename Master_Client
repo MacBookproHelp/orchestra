@@ -7,7 +7,7 @@ import json
 import time
 from threading import *
 from threading import Thread
-#final client to test
+#final client to test mac laptop
 def get_bd_address(ether_adapter):
 
     ip_data = os.popen("ifconfig " + ether_adapter)
@@ -16,9 +16,17 @@ def get_bd_address(ether_adapter):
         if match2:
             bd = match2.group(1)
             return bd
+def get_ip_data(ether_adapter):
+    ip_data = os.popen("ifconfig " + ether_adapter)
+    for line in ip_data:
+        match2 = re.search(r'inet\s+(\d+.\d+.\d+.\d+)', line)
+        if match2:
+            ip_ = match2.group(1)
+
+            return ip_
 def recv():
     sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-    host='192.168.1.46'
+    host=get_ip_data(ethernet_card)
     port=9289
     address=host,port
     sock.bind(address)
