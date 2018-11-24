@@ -2,9 +2,7 @@
 
 This repository contains multiple files which was used for testing but,
 
-Master1_Controller.py
-Master2_Controller.py
-Master_client.py
+Controller (2018-2019)
 
 These are the main files to run.
 
