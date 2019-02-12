@@ -1,0 +1,73 @@
+
+import zmq
+import time
+import socket
+import threading
+import multiprocessing
+import subprocess
+from subprocess import Popen
+from threading import Thread
+def bd_recv():
+    sock=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+    host='146.175.215.255'
+    port=9533
+    address=host,port
+    sock.bind(address)
+    msg,client=sock.recvfrom(1024)
+    a=msg.decode()
+    b=client[0]
+    return b
+
+def join_cluster():
+    subprocess.call(["/home/teja/PycharmProjects/new/tet2.sh"])
+
+def req_con(host,port):
+    context=zmq.Context()
+    socket = context.socket(zmq.REQ)
+    socket.connect("tcp://" "%s:%d" % ((host),port))
+    print("sending request")
+    socket.send_string("Can i join the cluster?")
+    msg=socket.recv(1024)
+    print("received reply: %s" %msg)
+
+class ThreadWithReturnValue(Thread):
+    #returning the value from any function
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, Verbose=None):
+        Thread.__init__(self, group, target, name, args, kwargs)
+        self._return = None
+    def run(self):
+        print(type(self._target))
+        if self._target is not None:
+            self._return = self._target(*self._args,
+                                                **self._kwargs)
+    def join(self, *args):
+        Thread.join(self, *args)
+        return self._return
+if __name__=='__main__':
+    #t1=threading.Thread(target=bd_recv,name='bdrecv')
+    twrv = ThreadWithReturnValue(target=bd_recv)
+    #t1.start()
+    twrv.start()
+    h=(twrv.join())
+    file = open('/home/teja/PycharmProjects/new/ip_of_controller', "w")
+    file.write(h)
+    file.close()
+    #t2=threading.Thread(target=req_con,name='req',args=(h,3233))
+    #t3=threading.Thread(target=join_cluster,name="join_cluster")
+    #t2.start()
+    #t3.start()
+
+'''
+
+#req res works 
+context=zmq.Context()
+socket=context.socket(zmq.REQ)
+host="192.168.1.27"
+port=3233
+socket.connect("tcp://" "%s:%d" % (format(host),port))
+print("sending req " )
+socket.send_string("hey controller")
+msg=socket.recv(1024)
+print("received replt: %s " % msg)
+'''
