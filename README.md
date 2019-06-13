@@ -1,23 +1,27 @@
-Controller implementation 
+CONTROLLER IMPLEMENTATION 
 --------------------------------------------------------------------------------------------------------------------------------------------------
-Requirements:
+REQUIREMENTS:
 Pycharm
-Docker
-python3
-Cassandra
-pyangbind
-ZMQ
+Docker  -> pip install docker
+python3 
+Cassandra -> pip install cassandra
+pyangbind -> sudo -h pip install pyang
+ZMQ -> pip install zmq
 yang model
 yang python files
 
 --------------------------------------------------------------------
-Usage:
+USAGE:
 
-Controller_A:
-Starts the database and we can start connecting to other devices starting with Controller_B, Wireless_SDN, Wired_SDN, Switch, AP and VMACs.
+CONTROLLER_A:
+Starts the database and we can start connecting to other devices starting with Controller_B,
+Wireless_SDN, Wired_SDN, Switch, AP and VMACs.
+
+CONTROLLER_B:
+Joins the cluster and able to communicate with other devices as well.
 
 ----------------------------------------------------------------
-Minimum two Linux machine
+Linux machine
 
 ---------------------------------------------------------------
 

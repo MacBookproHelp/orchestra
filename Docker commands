@@ -1,0 +1,29 @@
+DOCKER COMMANDS WHICH ARE USEFUL AND USED IN THE PROJECT
+--------------------------------------------------------------------------------------------------------------
+docker exec -it node1 nodetool status ---> Gives the cluster details
+
+docker ps -a --> check the container status
+
+docker run -it --link node1 --rm cassandra cqlsh node1 --> Connect to cqlsh 
+
+USE testspace;
+
+DESCRIBE table;
+
+Select * from table;
+
+--------------------------------------------------------------------------------------------------------------
+YANG SCRIPT TO PYTHON COMMANDS:
+
+export PYBINDPLUGIN=`/usr/bin/env python -c \
+'import pyangbind; import os; print ("{}/plugin".format(os.path.dirname(pyangbind.__file__)))'`
+
+echo $PYBINDPLUGIN
+
+pyang --plugindir $PYBINDPLUGIN -f pybind Switch_to_orc.yang > Switch_to_orc.py
+
+
+
+
+
+
