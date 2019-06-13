@@ -69,7 +69,7 @@ def bd_recv(Host, port, q19):
 
 # Receive Broadcast
 def bd_recv(Host, port, q16):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     address = Host, port
     sock.bind(address)
     msg, client = sock.recvfrom(4089)
@@ -99,7 +99,7 @@ def bd_recv_VMAC(Host, port):
 
 
 def bd_recv_AP(Host, port, q14):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     address = Host, port
     sock.bind(address)
     msg, client = sock.recvfrom(1024)
@@ -109,7 +109,7 @@ def bd_recv_AP(Host, port, q14):
 
 
 def bd_recv_Switch(Host, port, q7):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     address = Host, port
     sock.bind(address)
     msg, client = sock.recvfrom(1024)
@@ -255,7 +255,7 @@ def insert_wired(recv_string1):
 
 
 def listen_Switch(Host, port, q6):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     sock.bind((Host, port))
     while 1:
         msgg, client = sock.recvfrom(1024)
@@ -269,7 +269,7 @@ def listen_Switch(Host, port, q6):
 
 
 def listen_Ap(Host, port, q6):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     sock.bind((Host, port))
     while 1:
         msgg, client = sock.recvfrom(1024)
@@ -285,12 +285,12 @@ def listen_Ap(Host, port, q6):
 def talkToClient(ip):
     logging.info("sending 'clients we received your data' to %s", ip)
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     sock.sendto("ok".encode('utf-8'), ip)
 
 
 def listen_clients(Host, port, q15):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket(AF_INET, SOCK_DGRAM)
     sock.bind((Host, port))
     while True:
         msgg, client = sock.recvfrom(1024)
