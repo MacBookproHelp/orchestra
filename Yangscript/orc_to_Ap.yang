@@ -1,0 +1,32 @@
+module orc_to_Ap{
+	namespace "https://Ap.com/orc_to_Ap";
+	prefix "orc_to_Ap";
+	
+	typedef mac-address {
+       	  type string {
+              pattern '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5}';
+                }
+	}
+	grouping Add_client{
+		leaf Clientmac{
+			type mac-address;
+			}
+		}
+	grouping remove_client{
+		leaf Clientmac{
+			type mac-address;
+			}
+		}
+	container Add_Clients{
+	   list clients{
+		key "Clientmac";
+		uses Add_client;
+		}
+	}
+	container RemoveClients{
+	   list clientmac{
+		key "Clientmac";
+		uses remove_client;
+			}
+		}
+	}		

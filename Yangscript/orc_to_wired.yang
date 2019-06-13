@@ -1,0 +1,82 @@
+module orc_to_wired{
+	namespace "https://wired.com/orc_to_wired";
+	prefix "orc_to_wired";
+	
+	typedef port-number{
+	  type uint16{
+		range "0..65535";
+		}
+	}
+	typedef ipv4-address{
+          type string{
+          pattern
+             '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+           +  '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
+           + '(%[\p{N}\p{L}]+)?';
+        	}
+	}
+	
+	grouping addflow{
+		leaf ip_src{
+		type ipv4-address;
+			}
+		leaf ip_dst{
+		type ipv4-address;
+			}
+		leaf port{
+		type port-number;
+			}
+		}
+	grouping deleteflow{
+		leaf ip_src{
+		type ipv4-address;
+			}
+		leaf ip_dst{
+		type ipv4-address;
+			}
+		leaf port{
+		type port-number;
+			}
+	}
+	grouping changeflow{
+		leaf ip_src_old{
+		type ipv4-address;
+			}
+		leaf ip_dst_old{
+		type ipv4-address;
+			}
+		leaf port_old{
+		type port-number;
+			}
+		leaf ip_src_new{
+		type ipv4-address;
+			}
+		leaf ip_dst_new{
+		type ipv4-address;
+			}
+		leaf port_new{
+		type port-number;
+			}
+	}
+	
+	container switch{
+		container addflow{
+		list flow{
+			key "port";
+			uses addflow;
+			}
+		}
+		container deleteflow{
+		list flow{
+			key "port";
+			uses deleteflow;
+			}
+		}
+		container changeflow{
+		list flow{
+			key "port_old";
+			uses changeflow;
+			}
+		}
+	}
+}

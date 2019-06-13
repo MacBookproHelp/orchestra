@@ -1,9 +1,25 @@
-#Note
+Controller implementation 
+--------------------------------------------------------------------------------------------------------------------------------------------------
+Requirements:
+Pycharm
+Docker
+python3
+Cassandra
+pyangbind
+ZMQ
+yang model
+yang python files
 
-This repository contains multiple files which was used for testing but,
+--------------------------------------------------------------------
+Usage:
 
-Controller (2018-2019)
+Controller_A:
+Starts the database and we can start connecting to other devices starting with Controller_B, Wireless_SDN, Wired_SDN, Switch, AP and VMACs.
 
-These are the main files to run.
+----------------------------------------------------------------
+Minimum two Linux machine
 
-It was tested on linux ubuntu 16.04 and to run it use pycharm and check the ports at which controller for proper broadcast.
+---------------------------------------------------------------
+
+Yang py folder contains all necessary python files for sending the packets. 
+
