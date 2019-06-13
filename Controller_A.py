@@ -260,7 +260,7 @@ def listen_Ap(Host,port,q6):
         q6.put(msg)
         t = threading.Thread(target=insert_AP, args=(msg,))
         t.start()
-        print('inserted data to switch')
+        print('inserted data to AP')
     sock.close()
 
 def talkToClient(ip):
@@ -293,7 +293,7 @@ if __name__ == "__main__":
     t6 = threading.Thread(target=createKeySpace)
     t6.start()
     t3=threading.Thread(target=reply_for_req_controller,name="Send_Rep",args=(ip_of_the_machine,5367))
-
+    t3.start()
     q = Queue()
     t4 = threading.Thread(target=bd_recv_wireless, args=(bd_of_the_machine,5694,q))
     t4.start()
@@ -346,7 +346,7 @@ if __name__ == "__main__":
     t14 = threading.Thread(target=listen_Ap, args=("192.168.1.27", 4331, q15))
     t14.start()
     recv_string6 = (q15.get())
-    t15 = threading.Thread(target=insert_AP, name="insert_Switch", args=(recv_string6,))
+    t15 = threading.Thread(target=insert_AP, name="insert_Ap", args=(recv_string6,))
     t15.start()
 
 
