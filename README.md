@@ -23,3 +23,7 @@ Minimum two Linux machine
 
 Yang py folder contains all necessary python files for sending the packets. 
 
+Tet.sh -> Database script for Controller A
+
+Tet.sh -> Database script for Controller B
+
