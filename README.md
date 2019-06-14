@@ -1,5 +1,7 @@
+Scalable controller implementation for heterogenous wireless network management
+
 CONTROLLER IMPLEMENTATION 
---------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
 REQUIREMENTS:
 Pycharm
 Docker  -> pip install docker
@@ -10,7 +12,7 @@ ZMQ -> pip install zmq
 yang model
 yang python files
 
---------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
 USAGE:
 
 CONTROLLER_A:
@@ -20,14 +22,14 @@ Wireless_SDN, Wired_SDN, Switch, AP and VMACs.
 CONTROLLER_B:
 Joins the cluster and able to communicate with other devices as well.
 
-----------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
 Linux machine
 
----------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
 
 Yang py folder contains all necessary python files for sending the packets. 
 
 Tet.sh -> Database script for Controller A
 
-Tet.sh -> Database script for Controller B
+Tet2.sh -> Database script for Controller B
 
