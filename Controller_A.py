@@ -213,6 +213,9 @@ def send_req_wireless(host,port):
     socket.connect("tcp://" "%s:%d" % ((host), port))
     print("sending req to wireless sdn")
     sw = orc_to_wireless.orc_to_wireless()
+    ob = sw.handover.client.add('01:22:45:67:89:ac')
+    ob.old_mac = '01:32:35:67:90:ab'
+    ob.new_mac = '01:12:45:67:89:ab'
     a = sw.get()
     # this default should return a serializable version of obj or raise TypeError
     packet = (json.dumps(a, default=lambda x: x.__dict_))
@@ -228,6 +231,21 @@ def send_req_wired(host,port):
     socket.connect("tcp://" "%s:%d" % ((host), port))
     print("sending req to wired_sdn")
     sw = orc_to_wired.orc_to_wired()
+
+    ob = sw.switch.addflow.flow.add("5674")
+    ob.ip_src = "192.168.1.2"
+    ob.ip_dst = "192.168.1.3"
+
+    lm = sw.switch.deleteflow.flow.add("5644")
+    lm.ip_src = "192.168.1.5"
+    lm.ip_dst = "192.168.1.6"
+
+    kd = sw.switch.changeflow.flow.add("5684")
+    kd.ip_src_old = "192.168.1.98"
+    kd.ip_dst_old = "192.168.1.45"
+    kd.ip_src_new = "192.168.1.67"
+    kd.ip_dst_new = "192.168.1.24"
+    kd.port_new = '3453'
     a = sw.get()
     # this default should return a serializable version of obj or raise TypeError
     packet = (json.dumps(a, default=lambda x: x.__dict_))
@@ -281,19 +299,22 @@ def listen_clients(Host,port,q15):
         t = threading.Thread(target=talkToClient, args=(client,))
         t.start()
 if __name__ == "__main__":
-    #start_node()
+    start_node()
     ethernet_card = "wlp3s0"
     bd_of_the_machine = get_bd_address(ethernet_card)
     ip_of_the_machine = get_ip_data(ethernet_card)
-
+    #controller comm
     t1 = threading.Thread(target=broadcast, name="Send_Broadcast", args=(bd_of_the_machine, 5678))
     t1.start()
     t2 = threading.Thread(target=bd_recv_controller, name="Receive_Broadcast", args=(bd_of_the_machine, 5432))
     t2.start()
+    #database
     t6 = threading.Thread(target=createKeySpace)
     t6.start()
     t3=threading.Thread(target=reply_for_req_controller,name="Send_Rep",args=(ip_of_the_machine,5367))
     t3.start()
+
+    #wireless
     q = Queue()
     t4 = threading.Thread(target=bd_recv_wireless, args=(bd_of_the_machine,5694,q))
     t4.start()
@@ -304,10 +325,10 @@ if __name__ == "__main__":
     recv_string=(q2.get())
     t7 = threading.Thread(target=insert_wireless, name="insert", args=(recv_string,))
     t7.start()
-
     t11 = threading.Thread(target=send_req_wireless, name="send_req", args=(Host, 9843))
     t11.start()
 
+    #wired
     q3 = Queue()
     t8=threading.Thread(target=bd_recv_wired, args=(bd_of_the_machine,3727,q3))
     t8.start()
@@ -329,7 +350,7 @@ if __name__ == "__main__":
     Host2=(q7.get())
 
     q6=Queue()
-    t14 = threading.Thread(target=listen_Switch, args=("192.168.1.27", 4292,q6))
+    t14 = threading.Thread(target=listen_Switch, args=(ip_of_the_machine, 4292,q6))
     t14.start()
     recv_string2=(q6.get())
     t15=threading.Thread(target=insert_Switch,name="insert_Switch",args=(recv_string2,))
@@ -343,15 +364,15 @@ if __name__ == "__main__":
 
 
     q15 = Queue()
-    t14 = threading.Thread(target=listen_Ap, args=("192.168.1.27", 4331, q15))
+    t14 = threading.Thread(target=listen_Ap, args=(ip_of_the_machine, 4331, q15))
     t14.start()
     recv_string6 = (q15.get())
     t15 = threading.Thread(target=insert_AP, name="insert_Ap", args=(recv_string6,))
     t15.start()
 
-
+    #VMAC
     q10=Queue()
-    t17= threading.Thread(target=listen_clients, args=("192.168.1.27", 4221,q10))
+    t17= threading.Thread(target=listen_clients, args=(ip_of_the_machine, 4221,q10))
     t17.start()
     recv_string3=(q10.get())
     t18=threading.Thread(target=insert_VMAC,args=(recv_string3,))
